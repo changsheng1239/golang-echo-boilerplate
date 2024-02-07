@@ -22,10 +22,15 @@ func NewServerHTTP(logger *log.Logger, userHandler handler.UserHandler) *echo.Ec
 		AllowMethods: []string{http.MethodGet, http.MethodPut, http.MethodPost, http.MethodDelete, http.MethodOptions},
 	}))
 	e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
-		LogStatus:   true,
-		LogURI:      true,
-		LogError:    true,
-		HandleError: true, // forwards error to the global error handler, so it can decide appropriate status code
+		LogRemoteIP:  true,
+		LogHost:      true,
+		LogUserAgent: true,
+		LogLatency:   true,
+		LogStatus:    true,
+		LogRequestID: true,
+		LogURI:       true,
+		LogError:     true,
+		HandleError:  true, // forwards error to the global error handler, so it can decide appropriate status code
 		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
 			l := HTTPLogger(logger, c, v)
 			if v.Error == nil {
